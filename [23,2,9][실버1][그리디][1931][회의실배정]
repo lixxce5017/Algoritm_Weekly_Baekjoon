@@ -1,0 +1,68 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include<stdio.h>
+using namespace std;
+
+
+int main(void)
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    vector<pair<int,int>> arr;
+    int n,f,s;
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> f >> s;
+        arr.push_back(make_pair(f, s));
+
+    }
+    sort(arr.begin(), arr.end());
+        int T = arr[0].first;
+        int cnt = 1;
+        for (int i = 1; i < n; i++)
+        {
+            if (T <= arr[i].second)
+            {
+                cnt++;
+                T = arr[i].first;
+            }
+        }
+        cout << cnt;
+
+
+    /*처음 짰던 소스
+    int cnt = 0;
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        int start, finish;
+        cin >> start >> finish;
+        for (int i = start; i <= finish; i++)
+        {
+            arr[i] += 1;
+
+        }
+        while (start = finish) {
+            if (arr[finish] >=2)
+            {
+                break;
+            }
+            else {
+
+                if (arr[start] == 1 && arr[finish] == 1)
+                {
+                    cnt++;
+                        break;
+                }
+            }
+
+            finish--;
+        }
+    }
+    cout << cnt;*/
+}
