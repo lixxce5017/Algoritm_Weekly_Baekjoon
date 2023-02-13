@@ -1,0 +1,77 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include <string>
+#include<queue>
+using namespace std;;
+vector<int> v[100001];
+int visited1[100001] = { 0, };
+int visited2[100001] = { 0, };
+queue<int> q;
+
+void dfs(int r)
+{
+	visited1[r] = true;
+	cout << r << " ";
+	for (int i = 0; i < v[r].size(); i++)
+	{
+		int temp1 = v[r][i];
+		if (visited1[temp1] == true)
+			continue;
+
+			dfs(temp1);
+	}
+
+}
+
+
+void bfs(int r)
+{
+	q.push(r);
+	visited2[r] = true;
+	while (!q.empty())
+	{
+
+		int f = q.front();
+		q.pop();
+		cout << f << " ";
+		for (int i = 0; i < v[f].size(); i++)
+		{
+			int temp = v[f][i];
+			if (visited2[temp]==false)
+			{
+				q.push(temp);
+				visited2[temp] = true;
+			}
+
+		}
+
+
+	}
+
+}
+
+
+int main()
+{
+	int n, m, r;
+	cin >> n >> m >> r;
+	for (int i = 1; i <= m; i++)
+	{
+		int a, b;
+		cin >> a >> b;
+		v[a].push_back(b);
+		v[b].push_back(a);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		sort(v[i].begin(), v[i].end());
+	}
+	dfs(r);
+	cout << endl;
+	bfs(r);
+	
+
+	return 0;
+}
+
