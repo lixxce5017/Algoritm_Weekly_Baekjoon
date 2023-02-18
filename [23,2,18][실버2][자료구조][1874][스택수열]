@@ -1,0 +1,62 @@
+#include<iostream>
+#include<stack>
+#include<vector>
+using namespace std;
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	
+
+
+
+	int N;
+	cin >> N;
+	vector<int> arr(N, 0);
+	vector<char>result;
+	stack<int>MyStack;
+	int num = 1;
+	bool flag = true;
+	for (int i = 0; i < N; i++)
+	{
+		cin >> arr[i];
+	}
+	for (int i = 0; i < N; i++)
+	{
+		int su = arr[i];
+		if (su >= num)
+		{
+			while (su >= num)
+			{
+				MyStack.push(num++);
+				result.push_back('+'); 
+			}
+			MyStack.pop();
+			result.push_back('-');
+		}
+		else {
+			int n= MyStack.top();
+			MyStack.pop();
+			if (n > su)
+			{
+				flag = false;
+				cout << "NO";
+				break;
+
+			}
+			else
+			{
+				result.push_back('-');
+			}
+		}
+	}
+	if (flag)
+	{
+		for (int i = 0; i < result.size(); i++)
+		{
+			cout << result[i] << "\n";
+		}
+	}
+}
