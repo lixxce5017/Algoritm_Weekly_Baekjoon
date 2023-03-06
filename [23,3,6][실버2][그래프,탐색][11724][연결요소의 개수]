@@ -1,0 +1,66 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<queue>
+#include<algorithm>
+using namespace std;
+vector<bool>visitied;
+vector<bool>visitied2;
+vector<vector<int>> arr;
+int n, m;
+void dfs(int start)
+{
+	if (visitied[start])
+	{
+		return;
+	}
+	visitied[start] = true;
+	
+	for (auto i : arr[start])
+	{
+		if (!visitied[i])
+		{
+			 dfs(i);
+		}
+	}
+}
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+
+	
+	int n,m,v;
+	cin >> n >> m;
+	arr.resize(n + 1);
+	visitied = vector<bool>(n+1,false);
+	
+
+	for (int i = 0; i < m; i++)
+	{
+		int a, b;
+		cin >> a >> b;
+		arr[a].push_back(b);
+		arr[b].push_back(a);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		sort(arr[i].begin(), arr[i].end());
+	}
+	int cnt = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		if (!visitied[i])
+		{
+			dfs(i);
+			cnt++;
+		}
+	}
+	cout << cnt;
+
+	return 0;
+
+}
