@@ -1,0 +1,36 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<deque>
+#include<algorithm>
+using namespace std;
+typedef pair<int, int> Node;
+deque<Node> mydeque;
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n, l;
+	cin >> n >> l;
+	int cnt=1;
+	for (int i = 0; i < n; i++)
+	{
+		//frist 가 숫자 second가 인덱스
+		
+		int now;
+		cin >> now;
+		while (mydeque.size() && mydeque.back().first > now)
+		{
+			mydeque.pop_back();
+		}
+		mydeque.push_back(Node(now,i));
+		if (mydeque.front().second <= i - l)
+		{
+			mydeque.pop_front();
+		}
+		cout << mydeque.front().first << ' ';
+	}
+	
+}
