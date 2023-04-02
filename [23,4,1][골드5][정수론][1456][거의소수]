@@ -1,0 +1,58 @@
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<queue>
+#include<algorithm>
+#include<string>
+#include<cmath>
+using namespace std;
+long long arr[10000003] = { 0, };
+
+int main()
+{
+
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	long long n, m;
+	cin >> n >> m;
+	int cnt = 0;
+
+	for (long long i = 2; i < 10000001; i++)
+	{
+		arr[i] = i;
+	}
+
+	for (long long i = 2; i <= sqrt(10000001); i++)
+	{
+		if (arr[i] == 0)
+			continue;
+
+		for (long long j = i + i; j < 10000001; j += i)
+		{
+			arr[j] = 0;
+		}
+
+	}
+	
+	for (long long i = 2; i < 10000001; i++)
+	{
+		if (arr[i] != 0)
+		{
+			long long tmep = i;
+			while ((double)arr[i]<= (double)m/ (double)tmep)
+			{
+				if ((double)arr[i] >= (double)n / (double)tmep)
+				{
+					cnt++;
+				}
+				tmep *= arr[i];
+				
+			}
+		}
+	}
+	cout << cnt;
+	//cout << cnt;
+	//1,10 일 시 4,8,9로 3개가 정답
+}
