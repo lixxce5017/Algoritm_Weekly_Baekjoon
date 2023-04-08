@@ -1,0 +1,67 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+#include<cmath>
+using namespace std;
+
+bool isprendromll(int prime)
+{
+	string str = to_string(prime);
+	char const* carry = str.c_str();
+	int start = 0;
+	int end = str.size() - 1;
+	while (start < end)
+	{
+		if (carry[start] != carry[end])
+		{
+			return false;
+
+		}
+		start++;
+		end--;
+	}
+
+	return true;
+
+}
+int main()
+{
+
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	long long arr[1005000];
+	long long n;
+	cin >> n;
+	for (long long i = 2; i <= 1004000; i++)
+	{
+		arr[i] = i;
+	}
+
+	for (long long i = 2; i <= sqrt(1004000); i++)
+	{
+		if (arr[i] == 0)
+			continue;
+		for (long long j = i + i; j <= 1004000; j += i)
+		{
+			arr[j] = 0;
+	}
+	}
+	long long i = n;
+	while (true)
+	{
+		if (arr[i] != 0)
+		{
+			long long ans = arr[i];
+			
+			if (isprendromll(ans))
+			{
+				cout << arr[i]<<"\n";
+				break;
+			}
+			
+		}
+		i++;
+	}
+	return 0;
+}
