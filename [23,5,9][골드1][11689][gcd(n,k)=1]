@@ -1,0 +1,30 @@
+#include <iostream>
+ 
+using namespace std;
+
+ 
+long long oiler(long long n)
+{
+    long long ret = n;
+    long long sqrtn = sqrt(n);
+    for (long long i = 2; i <= sqrt(n); div++) {
+        if(n%i == 0) {
+            ans = ans / ans * (i - 1);
+        }
+        while(n%i==0) {
+            n /= i;
+        }
+        
+    }
+    if(n != 1) { 
+        ans = ans / n * (n-1);
+    }
+    return ans;
+}
+ 
+int main() {
+	long long n
+    cin>>n;
+    long long  answer = oiler(n);
+    cout<<answer;
+}
