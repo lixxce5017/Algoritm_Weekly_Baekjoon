@@ -1,0 +1,88 @@
+#include <iostream>
+#include<vector>
+using namespace std;
+#define MAX_SIZE 20000+1
+vector<int>Arr[MAX_SIZE];
+int visitied[MAX_SIZE];
+bool trueth;
+#define RED  1
+#define BLUE 2
+
+void dfs(int node)
+{
+	if (!visitied[node])
+	{
+		visitied[node] = RED;
+	}
+	for (auto i : Arr[node])
+	{
+		if (!visitied[i])
+		{
+			if (visitied[node] ==RED)
+			{
+				visitied[i] = BLUE;
+			}
+			else if (visitied[node] == BLUE)
+			{
+				visitied[i] = RED;
+			}
+			dfs(i);
+		}
+		else if (visitied[i] == visitied[node])
+		{
+			trueth = false;
+		}
+	
+	}
+	
+
+}
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int k;
+	cin >> k;
+	for (int i = 0; i < k; i++)
+	{
+		int n, m;
+		cin >> n >> m;
+		trueth = true;
+		for (int j = 0; j < m; j++)
+		{
+			int a, b;
+			cin >> a >> b;
+			Arr[a].push_back(b);
+			Arr[b].push_back(a);
+		}
+
+		for (int w = 1; w <= n;w++)
+		{
+			if (trueth)
+			{
+				dfs(w);
+			}
+			else
+			{
+				break;
+			}
+		}
+		if (trueth)
+		{
+			cout << "YES" << "\n";
+		}
+		else
+		{
+			cout << "NO" << "\n";
+		}
+		for (int r = 0; r <= n; r++)
+		{
+			Arr[r].clear();
+			visitied[r] = 0;
+		}
+
+	}
+
+}
+
