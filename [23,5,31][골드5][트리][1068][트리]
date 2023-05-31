@@ -1,0 +1,66 @@
+#include<iostream>
+#include<algorithm>
+#include<string>
+#include<vector>
+#include<cmath>
+#include<sstream>
+using namespace std;
+int root = 0;
+int deleNode = 0;
+int ans = 0;
+vector<vector<int>> Arr;
+vector<bool> visitied;
+void dfs(int node)
+{
+	int childNode = 0;
+	visitied[node] = true;
+	for (auto i : Arr[node])
+	{
+		if (!visitied[i] && i != deleNode)
+		{
+			childNode++;
+			dfs(i);
+		}
+		
+	}
+	if (childNode == 0)
+		ans++;
+	
+
+}
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n;
+	cin >> n;
+	Arr.resize(n + 1);
+	visitied.resize(n + 1);
+	
+	for (int i = 0; i < n; i++)
+	{
+		int p;
+		cin >> p;
+		if (p != -1)
+		{
+			Arr[p].push_back(i);
+			Arr[i].push_back(p);
+		}
+		else
+		{
+			root = i;
+		}
+	}
+	cin >> deleNode;
+	if (deleNode == root)
+	{
+		cout << 0<<"\n";
+	}
+	else
+	{
+		dfs(root);
+		cout << ans << "\n";
+	}
+}
