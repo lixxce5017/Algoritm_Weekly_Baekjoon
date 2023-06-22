@@ -1,0 +1,81 @@
+#include<iostream>
+#include<vector>
+#include<map>
+using namespace std;
+
+static vector<int> parent;
+void unionFind(int a, int b);
+int find(int a);
+bool checkSame(int a, int b);
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int N, M;
+    cin >> N >> M;
+    parent.resize(N + 1);
+
+    for (int i = 0; i <= N; i++)
+    {
+        parent[i] += i;
+    }
+
+    for (int i = 0; i < M; i++)
+    {
+        int q, a, b;
+        cin >> q >> a >> b;
+        if (q == 0)
+        {
+            unionFind(a, b);
+
+        }
+        else
+        {
+            if (checkSame(a, b))
+            {
+                cout << "YES" << "\n";
+            }
+            else
+            {
+                cout << "NO" << "\n";
+            }
+        }
+    }
+   
+}
+
+bool checkSame(int a, int b)
+{
+
+    a = find(a);
+    b = find(b);
+    if (a == b)
+    {
+        return true;
+    }
+    else
+        return false;
+
+}
+
+void unionFind(int a, int b)
+{
+    a = find(a);
+    b = find(b);
+    if (a != b)
+    {
+        parent[b] = a;
+    }
+
+}
+
+int find(int a)
+{
+    if (parent[a] != a)
+    {
+        parent[a] = find(parent[a]);
+    }
+    return parent[a];
+}
