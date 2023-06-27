@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include<queue>
+using namespace std;
+vector < vector<int> >Graph;
+vector<int> Degree;
+
+
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n, m;
+	cin >> n >> m;
+	Degree.resize(n + 1);
+	Graph.resize(n + 1);
+	for (int i = 0; i < m; i++)
+	{
+		int q, w;
+		cin >> q >> w;
+		Graph[q].push_back(w);
+		Degree[w]++;
+	}
+	queue<int>myque;
+	for (int i = 1; i <= n; i++)
+	{
+		if (Degree[i] == 0)
+		{
+			myque.push(i);
+		}
+	}
+
+	while (!myque.empty())
+	{
+		int cur = myque.front();
+		cout << cur << " ";
+		myque.pop();
+		for (int next : Graph[cur])
+		{
+			Degree[next]--;
+			if (Degree[next] == 0)
+			{
+				myque.push(next);
+			}
+		}
+	}
+}
