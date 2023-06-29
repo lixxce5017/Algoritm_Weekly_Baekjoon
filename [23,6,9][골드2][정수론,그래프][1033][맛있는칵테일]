@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include<queue>
+#include<tuple>
+using namespace std;
+long Weigt[10];
+long lcm;
+vector<tuple<int, int, int>>Arr[10];
+bool visitied[10];
+
+
+long gcd(long a, long b)
+{
+	if (b == 0)
+		return a;
+	else
+		return gcd(b, a %b);
+	
+}
+
+void dfs(int node)
+{
+	visitied[node] = true;
+	for (tuple<int, int, int>i : Arr[node])
+	{
+		int next = get<0>(i);
+		if (visitied[next] == false)
+		{
+			Weigt[next] = Weigt[node] * get<2>(i) / get<1>(i);
+			dfs(next);
+		}
+	}
+}
+
+int main(void)
+{
+
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n;
+	cin >> n;
+	lcm = 1;
+	for (int i = 0; i < n-1; i++)
+	{
+		int a, b, p, q;
+		cin >> a >> b >> p >> q;
+		Arr[a].push_back(make_tuple(b,p,q));
+		Arr[b].push_back(make_tuple(a,p,q));
+		lcm *= (p * q / gcd(p, q));
+	}
+	Weigt[0] = lcm;
+	dfs(0);
+	long lgcd = Weigt[0];
+	for (int i = 1; i < n; i++)
+	{	//전체의 최대공약수
+		lgcd = gcd(lgcd, Weigt[i]);
+	}
+	for (int i = 0; i < n; i++)
+	{//전쳋 최대 공약수로 최소 공배수 만들어서 출력
+		cout << Weigt[i] / lgcd << ' ';
+	}
+	
+}
