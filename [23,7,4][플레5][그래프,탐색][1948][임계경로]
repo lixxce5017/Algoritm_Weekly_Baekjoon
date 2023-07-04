@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include<queue>
+using namespace std;
+
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n,m;
+	cin >> n >> m;
+	vector<vector<pair<int,int>>> arr;
+	vector<vector<pair<int, int>>> rearr;
+	vector<int>degree;
+	vector<int>result;
+	int revcnt = 0;
+	arr.resize(n + 1);
+	rearr.resize(n + 1);
+	degree.resize(n + 1);
+	result.resize(n + 1);
+	vector<bool>visitied;
+	visitied.resize(n + 1);
+	for (int i = 0; i < m; i++)
+	{
+		int s, e, v;
+		cin >> s >> e >> v;
+		arr[s].push_back(make_pair(e, v));
+		rearr[e].push_back(make_pair(s, v));
+		degree[e]++;
+	}
+
+	int start, end;
+	cin >> start >> end;
+	queue<int> myque;
+	myque.push(start);
+	while (!myque.empty())
+	{
+		int now = myque.front();
+			myque.pop();
+		for (pair<int, int> next : arr[now])
+		{
+			degree[next.first]--;
+			result[next.first] = max(result[next.first], result[now] + next.second);
+			if (degree[next.first] == 0)
+			{
+				myque.push(next.first);
+			}
+		}
+	}
+	queue<int>reque;
+	reque.push(end);
+	visitied[end] = true;
+
+	while (!reque.empty())
+	{
+		int now = reque.front();
+		reque.pop();
+
+		for (pair<int, int> next : rearr[now])
+		{
+			if (result[next.first] + next.second == result[now])
+			{
+				revcnt++;
+
+				if (visitied[next.first] == false)
+				{
+					visitied[next.first] = true;
+					reque.push(next.first);
+				}
+			}
+		}
+	}
+	cout << result[end] << "\n";
+	cout << revcnt << "\n";
+
+
+
+}
