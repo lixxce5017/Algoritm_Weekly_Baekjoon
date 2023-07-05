@@ -1,0 +1,71 @@
+#include <iostream>
+#include <vector>
+#include<queue>
+#include<limits.h>
+using namespace std;
+typedef pair<int, int> edge;
+static int v, e, k;
+static vector<int> mdistane;
+static vector<bool> visitied;
+static vector<vector<edge>> mlist;
+static priority_queue<edge, vector<edge>, greater<edge>> myque;
+#define maxx 99999;
+
+int main(void)
+{
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int v, e, k;
+	cin >> v >> e >> k;
+	visitied.resize(v + 1);
+	mdistane.resize(v + 1);
+	fill(visitied.begin(), visitied.end(), false);
+	fill(mdistane.begin(), mdistane.end(), INT_MAX);
+	
+	mlist.resize(v + 1);
+	for (int i = 0; i < e; i++)
+	{
+		int u, v, w;
+		cin >> u >> v >> w;
+		mlist[u].push_back(make_pair(v, w));
+	}
+	myque.push(make_pair(0, k));
+	mdistane[k] = 0;
+
+	while (!myque.empty())
+	{
+		edge current = myque.top();
+		myque.pop();
+		//현재 정점 
+		int current_Ve = current.second;
+		if (visitied[current_Ve])
+		{
+			continue;
+		}
+		visitied[current_Ve] = true;
+
+		for (int i = 0; i < mlist[current_Ve].size(); i++)
+		{
+			edge tmp = mlist[current_Ve][i];
+			int next = tmp.first;
+			int value = tmp.second;
+			if (mdistane[next] > mdistane[current_Ve] + value)
+			{
+				mdistane[next] = value + mdistane[current_Ve];
+				myque.push(make_pair(mdistane[next], next));
+			}
+		}
+		
+	}
+	for (int i = 1; i <= v; i++)
+	{
+		if (visitied[i])
+		{
+			cout << mdistane[i] << "\n";
+		}
+		else
+			cout << "INF" << "\n";
+	}
+	
+}
