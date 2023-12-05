@@ -1,0 +1,103 @@
+#include <iostream>
+#include <string>
+#include<math.h>
+#include<vector>
+#include<queue>
+#include <climits>
+#include<algorithm>
+#include<climits>
+#include<tuple>
+#include<limits.h>
+using namespace std;
+int n, m, k;
+typedef tuple<int, int, int, char,int>mytu;
+int dirtion[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
+int arr[1003][1003];
+int visitied[1003][1003][11];
+int dfs()
+{
+	if (n == 1 && m == 1)
+	{
+		return 1;
+	}
+	queue<mytu>myq;
+	myq.push(mytu(1, 1, 0, 'd',0));
+	//d가 낮 부셔도 됨 , e가 밤 부숨 안되고 +1하고 대기
+	visitied[1][1][0] = 1;
+	while (!myq.empty())
+	{
+		mytu now = myq.front();
+		int noX = get<0>(now);
+		int noY = get<1>(now);
+		int count = get<2>(now);
+		char Nsun = get<3>(now);
+		int stay = get<4>(now);
+		myq.pop();
+		for (int i = 0; i < 4; i++)
+		{
+			int NowX = noX + dirtion[i][0];
+			int NowY = noY + dirtion[i][1];
+			if (NowX <1|| NowY < 1 || NowX > n || NowY > m)
+				continue;
+			if (NowX == n && NowY == m) {
+				return visitied[noX][noY][count]+1;
+			}
+			//부숨
+			if (arr[NowX][NowY] == 1)
+			{
+				if (count == k)
+					continue;
+				if (visitied[NowX][NowY][count+1] !=0)
+					continue;//낮 
+					if (Nsun == 'd')
+					{
+						visitied[NowX][NowY][count+1] = visitied[noX][noY][count] + 1+stay;
+						myq.push(mytu(NowX, NowY, count + 1, 'e',0));
+					}
+					//밤
+					else 
+					{
+						//밤이면 대기
+						myq.push(mytu(noX, noY, count, 'd',1));
+					}
+				
+			}	
+			else//벽이 아님 
+			{
+
+				if (visitied[NowX][NowY][count] != 0)continue;
+				visitied[NowX][NowY][count] = visitied[noX][noY][count] + 1;
+				if (Nsun == 'd')
+				{
+					myq.push(mytu(NowX, NowY, count, 'e', 0));
+				}
+				else
+				{
+					myq.push(mytu(NowX, NowY, count, 'd', 0));
+				}
+			}
+		}
+	}
+
+	return -1;
+}
+int main() {
+	cin >> n >> m >> k;
+	for (int i = 1; i <= n; i++)
+	{
+		string s;
+		cin >> s;
+		for (int j = 0; j < m; j++)
+		{
+			arr[i][j + 1] = s[j] - '0';
+		}
+	}
+
+
+	
+		cout << dfs();
+	
+
+
+
+}
