@@ -1,0 +1,83 @@
+#include<iostream>
+#include<algorithm>
+#include<stack>
+#include<queue>
+#include<vector>
+#include<deque>
+#include<cstring>
+using namespace std;
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	int t;
+	cin >> t;
+	while (t)
+	{
+
+		vector<int>arr[1001];
+		vector<int>val;
+		vector<int>degree;
+		vector<int>result;
+		int m;
+		int n;
+		int endNode;
+		cin >> n >> m;
+		degree.resize(n + 1,0);
+		result.resize(n + 1,0);
+		val.resize(n + 1,0);
+
+		for (int i = 1; i <= n; i++)
+		{
+			cin >> val[i];
+		}
+		for (int i = 0; i < m; i++)
+		{
+			int a, b;
+			cin >> a >> b;
+			arr[a].push_back(b);
+			degree[b]++;
+		}
+
+		cin >> endNode;
+		
+		stack<int> mq;
+
+		for (int i = 1; i <= n; i++)
+		{
+			if (degree[i] == 0)
+			{
+				mq.push(i);
+				result[i] = val[i];
+			}
+		}
+
+		while (!mq.empty())
+		{
+			int nowN = mq.top();
+			mq.pop();
+			for (int i = 0; i < arr[nowN].size(); i++)
+			{
+				int next = arr[nowN][i];
+				result[next] = max(val[next] + result[nowN], result[next]);
+				degree[next]--;
+				if (degree[next] == 0)
+				{
+					mq.push(next);
+				}
+			}
+		}
+	
+		cout << result[endNode] << "\n";
+	
+	
+
+		
+	
+		t--;
+	
+	}
+	return 0;
+}
