@@ -1,0 +1,49 @@
+#include <iostream>
+#include <string>
+#include<math.h>
+#include<vector>
+#include<queue>
+
+using namespace std;
+bool visitied[100005] = { 0, };
+
+int main() {
+
+    int start, n;
+    cin >> start>>n;
+    queue<pair<int,int>> myq;
+
+    myq.push(make_pair(start, 0));
+    while (!myq.empty())
+    {
+        int nowNode = myq.front().first;
+        int nowval = myq.front().second;
+        visitied[nowNode] =true;
+        myq.pop();
+        if (nowNode ==n)
+        {
+            cout << nowval;
+            return 0;
+        }
+        if (nowNode - 1 >= 0 && !visitied[nowNode - 1])
+        {
+           
+            myq.push(make_pair(nowNode - 1, nowval + 1));
+            visitied[nowNode - 1] = true;
+        }
+        if (nowNode + 1 <= 100000 && !visitied[nowNode + 1])
+        {
+            myq.push(make_pair(nowNode +1, nowval + 1));
+            visitied[nowNode +1] = true;
+        }
+        if (nowNode * 2 <= 100000 && !visitied[nowNode * 2])
+        {
+          
+            myq.push(make_pair(nowNode *2, nowval + 1));
+            visitied[nowNode * 2] = true;
+        }
+    }
+    
+
+    return 0;
+}
