@@ -1,0 +1,27 @@
+t=int(input())
+while t:
+    sx,sy,dx,dy= map(int,input().split())
+    n=int(input())
+    cnt=0
+    space=[]
+    for i in range(n):
+        cx,cy,r= map(int,input().split())
+        space.append((cx,cy,r))
+# 제곱 안넣으면 16에서 틀림 왜 제곱 굳이 넣어야하죠?
+# abs 없이도 아무문제 없던데 이유가 있나요?
+# 제곱하면 음수도 양수가 되기는하는데...
+    for x,y,R in space:
+        R=R**2
+        dist1=abs(x-sx)**2+abs(y-sy)**2
+        dist2=abs(dx-x)**2+abs(dy-y)**2
+        if dist1<R and dist2<R:
+            continue
+        elif dist1<R:
+            cnt+=1
+        elif dist2 < R:
+            cnt += 1
+
+    print(cnt)
+
+    t-=1
+
