@@ -5,6 +5,13 @@ using namespace std;
 bool visitied[501];
 vector<int> v[501]; // 자신보다 작은 학생
 vector<int> vd[501]; // 자신보다 큰 학생
+//vector<vector<int>>로하면 시간초과 
+//반고정 백터면 시간초과 안남  이유가 뭘까요?
+
+
+
+//키순서 제일 중요한 포인트 내가 키 순서인지 알려면
+// 내가 가는 곳 내가 오는 곳 노드가 n-1(나 제외) 이면 키 순서를 알 수 있다.
 int order = 0;
 void dfs(vector<int>arr[], int node)
 {
