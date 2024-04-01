@@ -2,22 +2,24 @@
 #include <vector>
 using namespace std;
 #include<queue>
+bool visited2[100003];
 int visitied[100003] = { 0, };
 vector<vector<int>> arr;
 int n, s, d;
 int ans = 0;
-int dfs(int now,int before)
+#define mysecond 2
+int dfs(int now, int before)
 {
 
 	for (auto i : arr[now])
 	{
-		if (before!=i)
+		if (visited2[i] == false)
 		{
-			visitied[now] = max(visitied[now], dfs(i, now) + 1);
+			visited2[i] = true;
+			visitied[now] = max(visitied[now], dfs(i, now));
 		}
 	}
-	if (visitied[now] >= d && now != s) ans++;
-	return visitied[now];
+	return visitied[now] + 1;
 }
 int main(void) {
 
@@ -33,7 +35,11 @@ int main(void) {
 		arr[a].push_back(b);
 		arr[b].push_back(a);
 	}
-
-	dfs(s,-1);
+	visited2[s] = true;
+	dfs(s, -1);
+	for (int i = 1; i <= n; i++)
+	{
+		if (visitied[i] >= d && i != s) ans++;
+	}
 	cout << ans * 2;
 }
