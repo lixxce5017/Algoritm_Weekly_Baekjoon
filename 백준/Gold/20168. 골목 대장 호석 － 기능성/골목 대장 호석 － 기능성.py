@@ -31,5 +31,5 @@ for _ in range(M):
 dfs(A,B,C,0)
 
 if answer==sys.maxsize:
-    answer-1
+    answer=-1
 print(answer)
