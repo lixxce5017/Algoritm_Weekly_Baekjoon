@@ -37,10 +37,7 @@ void propagat(int node, int start, int end)
 		//%2 해주면 무적권 짝수는 0 나오니까
 		//xor 연산은 한번하던 두번하던 상관이 없다
 		//홀수면 한 번만하는게 맞음 어차피 똑같은거에 똑같은거 하면 또 0나옴
-		if ((end - start+1)% 2 == 1)
-		{
 			tree[node] = tree[node]^lazy[node];
-		}
 		if (start != end)
 		{
 			lazy[node * 2] ^= lazy[node];
