@@ -1,45 +1,48 @@
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+
+#define MAX 1000001
+typedef long long ll;
 using namespace std;
-#include<queue>
-bool visited2[100003];
-int visitied[100003] = { 0, };
-vector<vector<int>> arr;
-int n, s, d;
-int ans = 0;
-#define mysecond 2
-int dfs(int now, int before)
+int n,start,d;
+int ans;
+vector<int> arr[100004];
+bool visitied[100004];
+int dfs(int node)
 {
-
-	for (auto i : arr[now])
-	{
-		if (visited2[i] == false)
-		{
-			visited2[i] = true;
-			visitied[now] = max(visitied[now], dfs(i, now));
-		}
-	}
-	return visitied[now] + 1;
+    int mx = 0;
+    for (auto i : arr[node])
+    {
+        if (visitied[i] == false)
+        {
+            visitied[i] = true;
+            int m = dfs(i);
+            mx = max(m, mx);
+        }
+    }
+    if (mx >= d)
+    {
+        ans++;
+    }
+    return mx+1;
 }
-int main(void) {
-
-	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cout.tie(0);
-	cin >> n >> s >> d;
-	arr.resize(n + 1);
-	for (int i = 0; i < n - 1; i++)
-	{
-		int a, b;
-		cin >> a >> b;
-		arr[a].push_back(b);
-		arr[b].push_back(a);
-	}
-	visited2[s] = true;
-	dfs(s, -1);
-	for (int i = 1; i <= n; i++)
-	{
-		if (visitied[i] >= d && i != s) ans++;
-	}
-	cout << ans * 2;
+int main() {
+    ios_base::sync_with_stdio(false); cin.tie(0);
+    ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
+    cin >> n >> start >> d;
+    for (int i = 1; i < n; i++)
+    {
+        int a, b;
+        cin >> a >> b;
+        arr[a].push_back(b);
+        arr[b].push_back(a);
+    }
+    visitied[start] = true;
+    dfs(start);
+    cout << max(0,(ans-1)*2);
+    return 0;
 }
