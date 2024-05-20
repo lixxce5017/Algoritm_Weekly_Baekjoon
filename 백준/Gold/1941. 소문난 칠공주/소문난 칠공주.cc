@@ -3,7 +3,7 @@
 #include<algorithm>
 #include<cstring>
 using namespace std;
-#define maxxx 1000
+
 char arr[5][5];
 bool chk_team[26];
 vector<pair<int,int>>mem_list;
