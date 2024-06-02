@@ -19,7 +19,7 @@ vector<pair<int, int>>home;
 vector<pair<int, int>>V;
 bool Select[13];
 int chik_Size = 0;
-int ret = 999999;
+int ret = INT_MAX;
 /// <summary>
 /// 대피소 후기 
 /// 실버 1정도 골5 정도? 치킨배달 완전하위호완 
@@ -33,21 +33,20 @@ int disten_Detect()
 
 		int x = chikin[i].first;
 		int y = chikin[i].second;
-		int d = 999999;
-		if (Select[i] == true)
-			continue;
+		int d = INT_MAX;
+
 		for (int j = 0; j < V.size(); j++)
 		{
 			int xx = V[j].first;
 			int yy = V[j].second;
 
-				
+
 			int dist = abs(xx - x) + abs(yy - y);
 
-			d =min(dist,d);
+			d = min(dist, d);
 			//cout << d << " ";
 		}
-		distic = max(d,distic);
+		distic = max(d, distic);
 	}
 	return distic;
 }
@@ -57,17 +56,13 @@ void dfs(int idx, int cnt)
 	if (cnt == k)
 	{
 		ret = min(disten_Detect(), ret);
+		return;
 	}
 	for (int i = idx; i < n; i++)
 	{
-		if (Select[i] == false)
-		{
-			Select[i] = true;
 			V.push_back(make_pair(chikin[i].first, chikin[i].second));
 			dfs(i+1, cnt + 1);
-			Select[i] = false;
 			V.pop_back();
-		}
 	}
 }
 
@@ -79,8 +74,8 @@ int main()
 	//2가 치킨집 //1이 집
 
 
-	cin >> n>>k;
-	
+	cin >> n >> k;
+
 	for (int i = 0; i < n; i++)
 	{
 		int y, x;
@@ -88,9 +83,17 @@ int main()
 		chik_Size++;
 		chikin.push_back(make_pair(y, x));
 	}
-				
-	
+
+
 	dfs(0, 0);
-	cout << ret;
+	if (ret == INT_MAX)
+	{
+		cout << 0;
+	}
+	else
+	{
+		cout << ret;
+	}
+	
 
 }
