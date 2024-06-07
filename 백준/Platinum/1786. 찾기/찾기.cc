@@ -1,60 +1,38 @@
 #include <iostream>
-#include <vector>
 #include <string>
-
+#include <vector>
+#define maxx 19912
 using namespace std;
-typedef long long ll;
-#define maxx 100000000
-ll a = 302;
-ll p = 1e9 + 7;
-ll powa[1000010];
-//라빈 카프로
-//kmp로 다시 해보자
-// 학교에서 배운대로
-//p는 언제나 엄청 큰 값
+//kmp 다음주 시험전에 다시 이걸로 보자
+vector<int> fail(string& s) {
+    vector<int> f(s.size());
+    int j = 0;
+    for (int i = 1; i < s.size(); i++) {
+        while (j > 0 && s[j] != s[i]) j = f[j - 1];
+        if (s[i] == s[j]) f[i] = ++j;
+    }
+    return f;
+}
+
 int main() {
-    string T, P; 
-    getline(cin, T); getline(cin, P);
+    string T, P; getline(cin, T); getline(cin, P);
 
-    int lenT = T.size();
-    int lenP = P.size();
-    if (lenT < lenP) {
-        cout << 0 << '\n';
-        return 0;
-    }
+    vector<int> f = fail(P);
 
-
-    // a의 제곱값을 미리 구해놓음
-    powa[0] = 1;
-    for (int i = 1; i < P.size(); i++) {
-        powa[i] = powa[i - 1] * a % p;
-    }
-
-    // 각각 P길이만큼 해시값 구함
-    ll hashT = 0;
-    ll hashP = 0;
-
-    for (int i = 0; i < P.size(); i++) {
-        hashT = (hashT + T[i] * powa[P.size() - 1 - i]) % p;
-        hashP = (hashP + P[i] * powa[P.size() - 1 - i]) % p;
-    }
-
+    int j = 0;
     vector<int> rs;
-    if (hashT == hashP) rs.push_back(1);
-
-    for (int i = 1; i <= (T.size() - P.size()); i++) {
-        // 앞글자 빼고, a만큼 곱해서 한자리씩 올리고, 새로 한글자 추가
-        hashT = (hashT - T[i - 1] * powa[P.size() - 1]) % p;
-        // 음수인경우 확인
-        if (hashT < 0) hashT += p;
-        hashT = hashT * a % p;
-        hashT = (hashT + T[i + P.size() - 1]) % p;
-        if (hashT == hashP) rs.push_back(i + 1);
-
+    for (int i = 0; i < T.size(); i++) {
+        while (j > 0 && T[i] != P[j]) j = f[j - 1];
+        if (T[i] == P[j]) j++;
+        if (j == P.size()) {
+            rs.push_back(i + 2 - P.size());
+            j = f[j - 1];
+        }
     }
 
     cout << rs.size() << '\n';
     for (int x : rs) cout << x << '\n';
-
     return 0;
 }
+
+
