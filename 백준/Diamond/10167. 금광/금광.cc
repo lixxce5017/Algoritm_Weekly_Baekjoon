@@ -72,10 +72,10 @@ int main() {
 	{
 		cout << arr[i].y << " " << arr[i].x << " " << "\n";
 	}*/
-	ll ans = 0;
+	ll ans = -10e5;
 	for (int i = 0; i <n; i++)
 	{
-		if (i && arr[i - 1].x == arr[i].x) continue;
+		if (i && arr[i - 1].y == arr[i].y) continue;
 		for (int k = 0; k < 8300; k++)
 		{
 			tree[k].l = tree[k].r = tree[k].lr = tree[k].sum = 0;
@@ -83,7 +83,7 @@ int main() {
 		for (int j = i; j < n; j++)
 		{
 			update(arr[j].x, arr[j].w);
-			if (j==n-1||arr[j].x != arr[j + 1].x)
+			if (j==n-1||arr[j].y != arr[j + 1].y)
 			{
 				ans = max(ans, tree[1].lr);
 			}
