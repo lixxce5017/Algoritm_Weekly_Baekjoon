@@ -25,7 +25,7 @@ arr=[]
 
 for i in range(n):
     arr.append(list(map(int,input().split())))
-
+# 주의 높이 0부터 돌려야함
 heght=0
 for i in range(n):
     heght=max(arr[i])
