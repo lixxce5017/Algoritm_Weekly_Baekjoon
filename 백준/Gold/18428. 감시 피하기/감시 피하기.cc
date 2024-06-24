@@ -23,7 +23,7 @@ void simutaion()
 			while (nx >= 0 && ny >=0 && nx < n && ny < n)
 			{
 				
-				if (arr[nx][ny] == 'S')
+				if (arr[nx][ny] == 'T')
 				{
 					//cout << "d";
 					return;
@@ -80,7 +80,7 @@ int main()
 		for (int j = 0; j < n; j++)
 		{
 			cin >> arr[i][j];
-			if (arr[i][j] == 'T')
+			if (arr[i][j] == 'S')
 			{
 				Student.push_back({ i,j });
 			}
