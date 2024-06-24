@@ -2,8 +2,8 @@
 #include <vector>
 #include <iostream>
 using namespace std;
-char arr[7][7];
-bool check[100];
+char arr[6][6];
+bool check[36];
 int dx[4] = { 0,0,-1,1 };
 int dy[4] = { 1,-1,0,0 };
 vector<pair<int, int>> Student;
@@ -18,42 +18,29 @@ void simutaion()
 		int y = Student[k].second;
 		for (int i = 0; i < 4; i++)
 		{
-			 int nx = x + dx[i];
-			 int ny = y + dy[i];
-			while (nx >= 0 && ny >=0 && nx < n && ny < n)
+			int nx = x + dx[i];
+			int ny = y + dy[i];
+			while (nx >= 0 && ny >= 0 && nx < n && ny < n)
 			{
-				
 				if (arr[nx][ny] == 'T')
 				{
-					//cout << "d";
 					return;
 				}
 				else if (arr[nx][ny] == 'W')
 				{
 					break;
-
 				}
 				nx += dx[i];
 				ny += dy[i];
 				}
 			}
 		}
-	/*for (int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			cout << arr[i][j] << " ";
-		}
-		cout << "\n";
-	}*/
-	//cout << "\n";
-	cout << "YES";
-	exit(0);
+	YoN = true;
 	return;
 	}
 
 
-void dfs(int cnt,int idx)
+void dfs(int cnt)
 {
 	if (cnt == 3)
 	{
@@ -62,11 +49,11 @@ void dfs(int cnt,int idx)
 	}
 	for (int i = 0; i < n*n; i++)
 	{
-		if (check[i]==false&&arr[i/n][i%n]=='X')
+		if (check[i] == false&&arr[i/n][i%n]=='X')
 		{
 			check[i] = true;
 			arr[i/n][i%n] = 'W';
-			dfs(cnt + 1,i+1);
+			dfs(cnt + 1);
 			arr[i/n][i%n] = 'X';
 			check[i] = false;
 		}
@@ -86,6 +73,9 @@ int main()
 			}
 		}
 	}
-	dfs(0,0);
-	cout << "NO";
+	dfs(0);
+	if (YoN)
+		cout << "YES";
+	else
+		cout << "NO";
 }
