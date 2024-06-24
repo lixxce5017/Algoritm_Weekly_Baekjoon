@@ -1,36 +1,29 @@
-#include <iostream>
 #include <algorithm>
+#include <vector>
+#include <iostream>
 using namespace std;
-int main(void)
+
+
+int coin[11];
+int main()
 {
-  
-	ios::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
-int n,k;
-  int j=0;
-int coin[12];
-  int cnt=0;
-  
-cin>>n>>k;
-  for(int i=0;i<n;i++)
-    {
-      cin>>coin[i];
-    }
-sort(coin,coin+n);
-  
-  while(1)
-    {
-      
-      if(coin[n-1]<=k)
-      { k=k-coin[n-1];
-        cnt++;
-        }
-      else
-        n--;
-      if(k==0)
-        break;
-  
-    }
-  cout<<cnt;
+	int n, val, ans = 0;
+	cin >> n >> val;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> coin[i];
+	}
+	//값이 큰 동전 단위 기준 정렬
+	sort(coin, coin + n,greater<int>());
+	for (int i = 0; i < n; i++)
+	{
+		//큰 동전부터 사용할 수 있는만큼 사용
+		while (val - coin[i] >= 0)
+		{
+			ans++;
+			val = val - coin[i];
+		}
+
+	}
+	cout << ans;
 }
