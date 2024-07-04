@@ -1,86 +1,93 @@
-#include <iostream>
-#include <vector>
-#define MAX 1003
-#define MAX2 10003112
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<tuple>
+#include<limits.h>
+#include<queue>
+#include<cstring>
 using namespace std;
-
-vector<int> v;
-int result[MAX][MAX];
-bool visited[MAX][MAX];
-bool check_cheese[MAX][MAX];
-
-int row, col; // 행 열
-int rest_cheese; // 남아 있는 치즈
-int cnt; // 횟수
-
-int dx[4] = { -1, 1, 0, 0 };
-int dy[4] = { 0, 0, -1, 1 };
-
-void DFS(int x, int y)
+int arr[103][103];
+int check[103][103];
+bool visitied[103][103];
+int dx[4] = { 0,0,-1,1 };
+int dy[4] = { 1,-1,0,0 };
+int n, m;
+vector<int>res;
+void dfs(int x, int y)
 {
-	visited[x][y] = true;
-
+	visitied[x][y] = true;
 	for (int i = 0; i < 4; i++)
 	{
 		int nx = x + dx[i];
 		int ny = y + dy[i];
-
-		if (nx < 0 || nx >= row || ny < 0 || ny >= col) continue; // 좌표를 벗어난경우
-		if (result[nx][ny] == 1 && check_cheese[nx][ny] == false) check_cheese[nx][ny] = true; // check될 치즈
-		if (result[nx][ny] == 0 && visited[nx][ny] == false) DFS(nx, ny);
-	}
-}
-
-void Remove() // 체크된 치즈를 없애는 함수
-{
-	v.push_back(rest_cheese); // 치즈의 개수 저장
-	if (rest_cheese == 0) return;
-	for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
+		if (nx >= 0 && ny >= 0 && nx < n && ny < m)
 		{
-			visited[i][j] = 0;
-			if (check_cheese[i][j] == true)
+			if (visitied[nx][ny] == false)
 			{
-				check_cheese[i][j] = false;
-				result[i][j] = 0;
-				rest_cheese--; // 치즈를 없애면서 개수 감소
-			}
-		}
-	}
-	cnt++;
-}
-
-int main()
-{
-	cin >> row >> col;
-	int value = 0;
-	//치즈 입력
-	for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
-		{
-			cin >> value;
-			result[i][j] = value;
-			if (value == 1) rest_cheese++;
-		}
-	}
-
-	for (int i = 0; i < row; i++)
-	{
-		for (int j = 0; j < col; j++)
-		{
-			if (result[i][j] == 0 && visited[i][j] == false)
-			{
-				DFS(i, j);
-				Remove();
-				if (rest_cheese == 0) // 치즈가 다 없어졌을 경우
+				if (arr[nx][ny] == 0)
 				{
-					cout << cnt << "\n";
-					cout << v[v.size() - 1] << "\n";
-					return 0;
+					visitied[nx][ny] = true;
+					dfs(nx, ny);
+				}
+				else if (arr[nx][ny] == 1)
+				{
+					visitied[nx][ny] = true;
+					check[nx][ny] += 1;
 				}
 			}
 		}
 	}
+}
+int melt()
+{
+	int cnt = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			if (check[i][j]!=0)
+			{
+				cnt++;
+				arr[i][j] = 0;
+			}
+		}
+	}
+	res.push_back(cnt);
+	return cnt;
+}
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cin >> arr[i][j];
+		}
+	}
+
+	int year = 1;
+	while (1)
+	{
+		memset(visitied, 0, sizeof(visitied));
+		memset(check, 0, sizeof(check));
+		dfs(0,0);
+		int res1 = melt();
+		if (res1 == 0)
+		{
+			cout << year - 1 << "\n";
+			cout <<res[res.size()-2];
+			
+			return 0;
+		}
+		year++;
+	}
+
 }
