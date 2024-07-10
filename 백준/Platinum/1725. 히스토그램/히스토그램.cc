@@ -1,48 +1,86 @@
-#include <bits/stdc++.h>
-
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<tuple>
+#include<limits.h>
+#include<queue>
+#include<cstring>
+#include<tuple>
+struct pos
+{
+    long long val, node;
+};
 using namespace std;
-#define maxxx 100000
-typedef long long ll;
-
+long long val[100003];
+pos tree[100003 * 4];
 int n;
-ll arr[100001], seg[400001];
-
-ll init(int node, int start, int end) {
-	if (start == end) return seg[node] = start;
-	int mid = start + end >> 1;
-	int a = init(node * 2, start, mid), b = init(node * 2 + 1, mid + 1, end);
-	if (arr[a] > arr[b]) return seg[node] = b;
-	else return seg[node] = a;
+void init(int node, int start, int end)
+{
+	if (start == end)
+	{
+		tree[node].val= val[start];
+		tree[node].node = start;
+		return;
+	}
+	int mid=(start + end) / 2;
+	init(node * 2, start, mid);
+	init(node * 2+1, mid+1, end);
+	if (tree[node * 2].val > tree[node * 2 + 1].val)
+	{
+		tree[node].val = tree[node * 2 + 1].val;
+		tree[node].node = tree[node * 2 + 1].node;
+	}
+	else
+	{
+		tree[node].val = tree[node * 2].val;
+		tree[node].node = tree[node * 2].node;
+	}
 }
 
-ll find(int node, int start, int end, int left, int right) {
-	if (start > right || end < left) return 0; 
-	if (left <= start && end <= right) return seg[node];
-
-	int mid = start + end >> 1;
-	int a = find(node * 2, start, mid, left, right), b = find(node * 2 + 1, mid + 1, end, left, right);
-	if (arr[a] > arr[b]) return b;
-	else return a;
+pos query(int node, int start, int end,int left,int right)
+{
+	if (start > right || end < left) return pos{ LONG_MAX,0 };
+	if (start>=left&&end<=right)
+	{
+		//cout << start << " " << end << " ";
+		return tree[node];
+	}
+	int mid = (start + end) / 2;
+	pos a = query(node * 2, start, mid, left, right);
+	pos b = query(node * 2 + 1, mid + 1, end, left, right);
+	if (a.val > b.val)
+		return b;
+	else
+		return a;
+}
+long long ans = 0;
+ void dfs(int start, int end)
+{
+	if (start > end)
+		return;
+	pos tmp = query(1, 1, n, start, end);
+	//cout << tmp.node << " "<<tmp.val;
+	ans = max(ans, tmp.val * (end - start + 1));
+	dfs(start, tmp.node-1);
+	dfs(tmp.node+1,end);
+	return;
 }
 
-ll query(ll left, ll right) {
-	if (left > right) return 0;
-	int index = find(1, 1, n, left, right);
-	ll ans = (right - left + 1) * arr[index];
-	ans = max(ans, query(left, index - 1));
-	ans = max(ans, query(index + 1, right));
-	return ans;
-}
-
-int main() {
-	cin.tie(0)->sync_with_stdio(0);
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
 	cout.tie(0);
-	arr[0] = 1e10;
 	cin >> n;
-		for (int i = 1; i <= n; i++) cin >> arr[i];
-
-		init(1, 1, n);
-
-		cout << query(1, n) << "\n";
-
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> val[i];
+	}
+	init(1, 1, n);
+	dfs(1, n);
+	cout << ans;
 }
