@@ -16,12 +16,12 @@ int dx[4] = { 0,0,-1,1 };
 int dy[4] = { 1,-1,0,0 };
 int n, m;
 int cnt = 0;
-int res=INT_MAX;
+int res = INT_MAX;
 //실수한 부분 
 //	if(check.size()>=1)
 // 안가는것을 고려하지 않았음
 // 이외엔 그냥 2048,구슬탈출 하위호완 중력 문제 느낌
-void dfs(int x, int y,int count,int dist)
+void dfs(int x, int y, int count, int dist)
 {
 	if (count == cnt)
 	{
@@ -30,36 +30,29 @@ void dfs(int x, int y,int count,int dist)
 	}
 	for (int i = 0; i < 4; i++)
 	{
-			int count_jum = 0;
-			int nx = x;
-			int ny = y;
-			vector<pair<int, int>> check;
-			while (1)
-			{
-				 nx += dx[i];
-				 ny += dy[i];
-				if (nx >= 0 && ny >= 0 && nx < n && ny < m&&visitied[nx][ny] == false && arr[nx][ny] == '.')
-				{
-					visitied[nx][ny] = true;
-					count_jum++;
-					check.push_back({ nx,ny });
-				}
-				else
-				{
-					nx -= dx[i];
-					ny -= dy[i];
-					break;
-				}
-			}
-			if (check.size() >= 1)
-			{
-				dfs(nx, ny, count + count_jum, dist + 1);
-			}
-			for(auto k:check)
-			{
-				visitied[k.first][k.second] = false;
-			}
-			check.clear();
+		int count_jum = 0;
+		int nx = x;
+		int ny = y;
+		vector<pair<int, int>> check;
+
+		while (nx+dx[i] >= 0 && ny+dy[i] >= 0 && nx+dx[i] < n && ny+dy[i] < m && 
+			visitied[nx+dx[i]][ny+dy[i]] == false && arr[nx+dx[i]][ny+dy[i]] == '.')
+		{
+			ny += dy[i];
+			nx += dx[i];
+				visitied[nx][ny] = true;
+				count_jum++;
+				check.push_back({ nx,ny });
+		}
+		if (check.size() >= 1)
+		{
+			dfs(nx, ny, count + count_jum, dist + 1);
+		}
+		for (auto k : check)
+		{
+			visitied[k.first][k.second] = false;
+		}
+		check.clear();
 	}
 }
 
@@ -69,7 +62,7 @@ int main()
 	cin.tie(0);
 	cout.tie(0);
 	int q = 1;
-	while (cin>>n>>m)
+	while (cin >> n >> m)
 	{
 		for (int i = 0; i < n; i++)
 		{
@@ -98,7 +91,7 @@ int main()
 		if (res == INT_MAX)
 			cout << "Case " << q << ": " << -1 << "\n";
 		else
-			cout << "Case " << q<< ": " << res << "\n";
+			cout << "Case " << q << ": " << res << "\n";
 		res = INT_MAX;
 		cnt = 0;
 		q++;
