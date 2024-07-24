@@ -1,107 +1,96 @@
-#include <iostream>
-#include<vector>
+#include<iostream>
 #include<algorithm>
+#include<vector>
+#include<string>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<tuple>
+#include<limits.h>
+#include<queue>
 #include<cstring>
+#include<tuple>
 using namespace std;
-
-char arr[5][5];
-bool chk_team[26];
-vector<pair<int,int>>mem_list;
-int fx[4] = { 1,0,-1, };
-int fy[4] = { 0,-1,0,1 };
-bool chk[5][5];
-bool chk_connetion[5][5];
-int cnt;
-
-//11퍼센트에서 틀린이유 : 그렇게 탐색하면 절때 T자 or 십자 모양의 경우의 수를 못 본다.
-//그래서 우리 테트로노미노 할 때도 t 자만 따로 구현하여줬었다.
-//그래서 우리는 다시 중첩반복문을 돌려서 4방향 중 제일 작은 값을 제외하는 방법으로 구하였다
-
-//두번째 방법으로는 dfs로만 하면서 추가적으로 백터를 만들어 좌표를 넣고
-//거기서 계속 가는 방법으로 t자를 구현 할 수 있다.
-//하지만 그건 dpeth가 4일 경우에만 가능하고 dpeth가 7일 경우엔는 총 7dpeth의 T모양이 나오지 않는다
-// 이건 printf 찍어보면 어떤 모양으로 나오는지 알 수 있다.
+int n;
+//조합날릴때 조심
+//ssssyyy 가 카운트 될때 다른 경우의 수에서 와서
+//카운트 할 수 있는 부분은
+//조합+ 임도연파가 4개 이상 되는 순간 가지치기해서 한 번만 정답을 보는것으로 막는다
+//특징: 연결되어 있는 곳에서 연결 확인+ y/s 여부 보면 안됨 정답 카운트가 더 됨
+//조합 날리는 것은 list에 넣어 날리건 25로 날리건 5/5 이중 포문 얘만 빼고 조합만 되면됨. 
 
 
-//세번째 그래서 이 문제는 테트로노미노와 또 다른 방법으로 t자를 구현해줘야 한다.
-
-//궁금해 하던 점:s에서 시작하여 총 7개의를 보는데 반대로 오는건 카운트 되는건 어찌 막는가?
-//백트래킹 조합 idx에서부터 순서대로 가면서 chk로 막아놔서 역으로 거슬러가는 경우는 나오지 않음
-int make_team(int x, int y) {
-         // cout << chk[x][y] << " " << chk_connetion[x][y] << "\n";
-        int cnt = 1;
-        for (int i = 0; i < 4; i++) {
-            int nx = fx[i] + x;
-            int ny = fy[i] + y;
-            if (nx >= 0 && ny >= 0 && nx < 5 && ny < 5 && chk[nx][ny] == true && chk_connetion[nx][ny] == false)
-            {
-                chk_connetion[nx][ny] = true;
-                cnt += make_team(nx, ny);
-            }
-        }
-        return cnt;
- }
-
-void RandomTeam(int depth, int idx, int cnt_Y)
+//이중 포문 
+//0 0,1 1, 22, 33,44,43, 3,2, 2,1 이런식으로 지극히 적게 경우의 수를 보게 됨
+//25:0,1 0, 2, 0,3 ,0,4, 0,5 ,1,0 1,1,1,2 이런식으로 idx로 막아도 더 나머지 연산으로 더 많이 경우를 보게됨
+char arr[10][10];
+bool visitied[10][10];
+bool selected[5][5];
+int dx[4] = { 0,0,-1,1 };
+int dy[4] = { 1,-1,0,0 };
+int cnt = 0;
+vector<pair<int, int>> Map;
+int check(int x, int y)
 {
-    //cout << depth << "\n";
-    //s가 아니라 y의 개수로 가지치기
-    //y가 4가 넘어가면 더 이상 보는 의미가 없음
-    //s가 4가 될 수가 없어서 
-    if (cnt_Y==4)
-    {
-        return;
-    }
-    //cnt_y가 4까지 도달하지 않고 깊이가 7개까지 왔음
-    // 그러므로 연결되어 있는지만 검사
-
-    if (depth == 7)
-    {
-        
-        memset(chk_connetion, false, sizeof(chk_connetion));
-        int now = idx - 1;
-        int x = mem_list[now].first;
-        int y = mem_list[now].second;
-        chk_connetion[x][y] = true;
-        //cout << idx << " ";
-        //모두 연결되어 있는 개수가 7개 이므로 결과값 추가
-        if (make_team(x,y) == 7)
-          {
-            cnt++;
-        }
-        return;
-    }
-    //모든 좌표를 백트래킹
-    for (int i = idx; i < mem_list.size(); i++)
-    {
-        pair<int, int>now =mem_list[i];
-        int nx = now.first;
-        int ny = now.second;
-        chk[nx][ny] = true;
-        //s인지 y인지 변수 , 이름과 기능이 너의 것과 같음
-        int qwer = 0;
-        if (arr[nx][ny] == 'Y')
-        {
-            qwer += 1;
-        }
-        RandomTeam(depth + 1, i+1, qwer+ cnt_Y);
-        chk[nx][ny] = false;
-
-    }
-
-
+	int count = 1;
+	for (int i = 0; i < 4; i++)
+	{
+		int nx = x + dx[i];
+		int ny = y + dy[i];
+		if (nx < 0 || ny < 0 || nx >= 5 || ny >= 5)
+			continue;
+		if (selected[nx][ny] == false||visitied[nx][ny]==true)
+			continue;
+		visitied[nx][ny] = true;
+		count += check(nx, ny);
+	}	
+	return count;
 }
 
-int main() {
-    string s;
-    for (int i = 0; i < 5; i++) {
-        cin >> s;
-        for (int j = 0; j < 5; j++) {
-            arr[i][j] = s[j];
-            mem_list.push_back({ i,j });
-        }
-    }//0부터 24개까지 총 25개 존재
-    RandomTeam(0, 0, 0);
-    
-    cout << cnt;
+void dfs(int depth,int idx,int x,int y,int nocnt)
+{
+	if (nocnt>3)
+		return;
+	if (depth == 7)
+	{
+		memset(visitied, false, sizeof(visitied));
+		visitied[x][y] = true;
+		
+		int count = check(x, y);
+		if (count == 7)
+			cnt++;
+		return;
+	}
+	for(int i=idx;i<25;i++)
+	{ 
+		int nx = i / 5;
+		int ny = i% 5;
+		if (selected[nx][ny] == false)
+		{
+			int qwer = 0;
+			if (arr[nx][ny] == 'Y')
+				qwer++;
+			selected[nx][ny] = true;
+			dfs(depth + 1, i + 1, nx, ny, nocnt+qwer);
+			selected[nx][ny] = false;
+		}
+	}
+}
+
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	for (int i = 0; i < 5; i++)
+	{
+		for (int j = 0; j < 5; j++)
+		{
+			cin >> arr[i][j];
+			Map.push_back({ i,j });
+		}
+	}
+	dfs(0, 0,0,0,0);
+	cout << cnt;
 }
