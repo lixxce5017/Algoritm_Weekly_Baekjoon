@@ -1,41 +1,93 @@
-#include <iostream>
-#include <bits/stdc++.h>
-#define dfsd 1000
+#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+#include<deque>
+#include<queue>
+#include<stack>
+#include<tuple>
+#include<limits.h>
+#include<queue>
+#include<cstring>
+#include<tuple>
 using namespace std;
-int k;
-char c[10];
-bool check[10];
-vector<string> ans;
-bool ok(string num) {
-    for (int i = 0; i < k; i++) {
-        if (c[i] == '>') {
-            if (num[i] < num[i + 1]) return false;
-        }
-        else if (c[i] == '<') {
-            if (num[i] > num[i + 1]) return false;
-        }
+int n;
+long long maxx = 0;
+long long minn = 9987654321;
+bool vsitieid[10];
+string max_ans;
+string min_ans;
+void dfs(int depth,string s, long long num,int per, string ans)
+{
+	if (n== depth)
+	{
+		if (num > maxx)
+		{
+			maxx = num;
+			max_ans = ans;
+		}
+		if (num < minn)
+		{
+			minn = num;
+			min_ans = ans;
+		}
+		return;
+	}
 
-    }
-    return true;
+	for (int i = 0; i <= 9; i++)
+	{
+		if (vsitieid[i] == false)
+		{
+
+			if (s[depth] == '<')
+			{
+				if (per < i)
+				{
+					ans.push_back(i + '0');
+					vsitieid[i] = true;
+					dfs(depth + 1, s, (num * 10) + i, i,ans);
+					vsitieid[i] = false;
+					ans.pop_back();
+				}
+			}
+			else
+			{
+				if (per > i)
+				{
+					ans.push_back(i + '0');
+					vsitieid[i] = true;
+					dfs(depth + 1, s, (num * 10) + i, i,ans);
+					vsitieid[i] = false;
+					ans.pop_back();
+				}
+			}
+		}
+	}
+
 }
-void go(int index, string num) {
-    if (index == k + 1) {
-        if (ok(num)) ans.push_back(num);
-        return;
-    }
-    for (int i = 0; i <= 9; i++) {
-        if (check[i]) continue;
-        check[i] = true;
-        go(index + 1, num + to_string(i));
-        check[i] = false;
-    }
-}
-int main() {
-    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
-    cin >> k;
-    for (int i = 0; i < k; i++) cin >> c[i];
-    go(0, "");
-    auto p = minmax_element(ans.begin(), ans.end());
-    cout << *p.second << "\n";
-    cout << *p.first;
+
+int main()
+{
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+	cout.tie(0);
+	string s;
+	cin >> n;
+	cin.ignore();
+	//이렇게 입력받으면 n을 입력받고 엔터를 누른 엔터가
+	//버퍼에 남아 있어서 엔터가 버퍼에 있는걸 무시해주는 
+	//cin.ignore()가 필요하다.
+	getline(cin,s);
+	//공백제거
+	s.erase(remove(s.begin(), s.end(), ' '), s.end());
+	for (int i = 0; i <= 9; i++)
+	{
+		string q;
+		q+=i + '0';
+		vsitieid[i] = true;
+		dfs(0, s, i, i, q);
+		vsitieid[i] = false;
+	}
+	cout << max_ans << "\n" << min_ans;
+
 }
