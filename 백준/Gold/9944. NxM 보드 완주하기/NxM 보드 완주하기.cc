@@ -1,101 +1,83 @@
 #include<iostream>
-#include<algorithm>
-#include<vector>
-#include<string>
-#include<deque>
-#include<queue>
-#include<stack>
-#include<tuple>
 #include<limits.h>
-#include<queue>
 #include<cstring>
 using namespace std;
-char arr[31][31];
-bool visitied[31][31];
-int dx[4] = { 0,0,-1,1 };
-int dy[4] = { 1,-1,0,0 };
-int n, m;
-int cnt = 0;
-int res = INT_MAX;
-//실수한 부분 
-//	if(check.size()>=1)
-// 안가는것을 고려하지 않았음
-// 이외엔 그냥 2048,구슬탈출 하위호완 중력 문제 느낌
-void dfs(int x, int y, int count, int dist)
-{
-	if (count == cnt)
-	{
-		res = min(dist, res);
+
+int dx[4] = { 1,0,-1,0 };
+int dy[4] = { 0,-1,0,1 };
+int n = 0, m = 0;
+int ans,q;
+char txt_box[40][40] = { 0 };
+bool visited[40][40];
+int change_ans = INT_MAX;
+int cnt_can_pass;
+
+void dfs(int x, int y, int cnt, int direct,int change) {//dist : 0=d, 1=s, 2=a, 3=w
+	//cout << change <<" "<< cnt << '\n';
+	//cout << cnt << " ";
+	if (cnt == cnt_can_pass) {
+		ans = min(change, ans);
 		return;
 	}
-	for (int i = 0; i < 4; i++)
-	{
-		int count_jum = 0;
-		int nx = x;
-		int ny = y;
-		vector<pair<int, int>> check;
-
-		while (nx+dx[i] >= 0 && ny+dy[i] >= 0 && nx+dx[i] < n && ny+dy[i] < m && 
-			visitied[nx+dx[i]][ny+dy[i]] == false && arr[nx+dx[i]][ny+dy[i]] == '.')
-		{
-			ny += dy[i];
-			nx += dx[i];
-				visitied[nx][ny] = true;
-				count_jum++;
-				check.push_back({ nx,ny });
-		}
-		if (check.size() >= 1)
-		{
-			dfs(nx, ny, count + count_jum, dist + 1);
-		}
-		for (auto k : check)
-		{
-			visitied[k.first][k.second] = false;
-		}
-		check.clear();
+	visited[x][y] = true;
+	if (txt_box[x + dx[direct]][y + dy[direct]] == '.' && visited[x + dx[direct]][y + dy[direct]] == false) {
+		if(x+dx[direct]>=0&&dy[direct]+y>=0&&x+ dx[direct] <n&&y+dy[direct]<m)
+		dfs(x + dx[direct], y + dy[direct], cnt + 1, direct,change);
 	}
+	else {
+		for (int i = 0; i < 4; i++) {
+			int nx = dx[i] + x;
+			int ny = dy[i] + y;
+			if (nx >= 0 && ny >= 0 && nx < n && ny < m && visited[nx][ny] == false && txt_box[nx][ny] == '.') {
+				dfs(nx, ny, cnt + 1, i,change+1);
+
+			}
+		}
+	}
+	visited[x][y] = false;
 }
 
-int main()
-{
-	ios::sync_with_stdio(false);
-	cin.tie(0);
-	cout.tie(0);
-	int q = 1;
-	while (cin >> n >> m)
-	{
-		for (int i = 0; i < n; i++)
-		{
-			for (int j = 0; j < m; j++)
-			{
-				cin >> arr[i][j];
-				if (arr[i][j] == '.')
-				{
-					cnt++;
+int main() {
+	while (cin >> n >> m) {
+		ans = INT_MAX;
+		change_ans = INT_MAX;
+		cnt_can_pass = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				cin >> txt_box[i][j];
+				if (txt_box[i][j] == '.') {
+					cnt_can_pass++;
 				}
 			}
 		}
-		for (int i = 0; i < n; i++)
-		{
-			for (int j = 0; j < m; j++)
-			{
-				if (arr[i][j] == '.')
-				{
-					visitied[i][j] = true;
-					//cout << "start" << "\n";
-					dfs(i, j, 1, 0);
-					visitied[i][j] = false;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				if (txt_box[i][j] == '.') {
+					bool falg = false;
+					for (int t = 0; t < 4; t++) {
+						int tx = dx[t] + i;
+						int ty = dy[t] + j;
+						if (tx >= 0 && ty >= 0 && tx < n && ty < m && txt_box[tx][ty] == '.') {
+							dfs(i, j, 1, t,1);
+							falg = true;
+						}
+					}
+					if (falg==false)
+					{
+						dfs(i, j, 1, 0, 0);
+					}
 				}
 			}
 		}
-		if (res == INT_MAX)
+		for (int i = 0; i < 40; i++) {
+			memset(txt_box[i], 0, 40);
+	}
+		q++;
+
+		if (ans == INT_MAX)
 			cout << "Case " << q << ": " << -1 << "\n";
 		else
-			cout << "Case " << q << ": " << res << "\n";
-		res = INT_MAX;
-		cnt = 0;
-		q++;
-		memset(visitied, false, sizeof(visitied));
-		memset(arr, 0, sizeof(arr));
+			cout << "Case " << q << ": " << ans << "\n";
+		
 	}
 }
