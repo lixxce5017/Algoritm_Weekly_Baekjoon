@@ -6,7 +6,7 @@
 #include<vector>
 using namespace std;
 
-int dp[100010];
+int dp[100003];
 
 int main() {
 
@@ -16,7 +16,7 @@ int main() {
   
     dp[3] = 1;
     dp[5] = 1;
-    for (int i = 1; i <= 100004; i++)
+    for (int i = 1; i <= n; i++)
     {
         dp[i] = 987654321;
     }
